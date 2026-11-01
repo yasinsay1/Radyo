@@ -36,5 +36,7 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:$media3")
     implementation("androidx.media3:media3-exoplayer-hls:$media3")
     implementation("androidx.media3:media3-session:$media3")
+    implementation("androidx.media3:media3-datasource-okhttp:$media3")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.guava:guava:33.3.1-android")
 }
