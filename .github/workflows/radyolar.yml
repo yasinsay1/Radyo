@@ -1,0 +1,30 @@
+name: Radyo listesi
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Listeleri birleştir
+        run: python3 tools/merge_radyolar.py
+
+      - name: Değişiklik varsa kaydet
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add radyolar.m3u
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok"
+          else
+            git commit -m "radyolar.m3u güncellendi"
+            git push
+          fi
