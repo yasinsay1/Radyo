@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,3 +30,16 @@ jobs:
         with:
           name: m3u-radyo-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      # Girişsiz, doğrudan indirilebilir APK bağlantısı için sürüm olarak yayınla
+      - name: APK'yı sürüm olarak yayınla
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/debug/app-debug.apk M3U-Radyo.apk
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest M3U-Radyo.apk \
+            --title "Son sürüm" \
+            --notes "Otomatik derlenen son APK (${GITHUB_SHA::7})" \
+            --target "$GITHUB_SHA" \
+            --latest
